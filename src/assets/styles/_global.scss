@@ -1,0 +1,70 @@
+html {
+  overflow-y: auto;
+  font-family: 'Involve-Bold';
+  &.dark {
+    color-scheme: dark;
+  }
+}
+h2 {
+  font-family: 'Involve';
+}
+
+.v-card--variant-elevated:not(.v-card--flat) {
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+}
+
+// .v-theme--light {
+//   .v-main {
+//     // background-color: #f2f5f8;
+//   }
+// }
+
+.v-overlay__content > .v-card {
+  overflow-y: overlay !important;
+}
+
+.button {
+  background-color: #000 !important;
+  color: #f2f5f8;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: normal;
+  min-width: 120px;
+  &-primary {
+    min-width: 120px;
+  }
+  &-secondary {
+    background-color: #808080;
+    text-decoration: none;
+    text-transform: none;
+    letter-spacing: normal;
+    color: #fff;
+    min-width: 120px;
+  }
+  &-icon {
+    border-radius: 6px;
+    max-height: 38px;
+    max-width: 38px;
+  }
+  &-disabled {
+    background-color: rgb(255, 255, 255) !important;
+    color: rgba(0, 0, 0, 0.87);
+    min-width: 120px;
+  }
+}
+.v-list-item-title {
+  font-size: 20px !important;
+  line-height: 1 !important;
+}
+
+@font-face {
+  font-family: 'Involve';
+  src: url(/src/assets/fonts/Involve-Regular.woff) format('woff');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Involve-Bold';
+  src: url(/src/assets/fonts/Involve-Medium.woff) format('woff');
+  font-weight: 700;
+}

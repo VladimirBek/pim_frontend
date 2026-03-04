@@ -1,0 +1,115 @@
+services:
+
+  backoffice:
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    container_name: backoffice
+    restart: always
+    networks:
+      - traefik-public
+      - default
+    depends_on:
+      backoffice_pg_db:
+        condition: service_healthy
+        restart: true
+      # prestart:
+      #   condition: service_completed_successfully
+    environment:
+      - TZ=${TZ?"Europe/Moscow"}
+      - DOMAIN=${DOMAIN}
+      - FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - SECRET_KEY=${SECRET_KEY?Variable not set}
+      - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
+      - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
+      - POSTGRES_SERVER=${POSTGRES_SERVER}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - DB_1C=${DB_1C}
+    build:
+      context: "./"
+    volumes:
+      - ./:/app/
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.constraint-label=traefik-public
+
+      - traefik.http.services.${STACK_NAME?Variable not set}-backoffice.loadbalancer.server.port=8000
+
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backoffice-http.rule=Host(`api.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backoffice-http.entrypoints=http
+
+  # prestart:
+  #   image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+  #   build:
+  #     context: "./"
+  #     args:
+  #       INSTALL_DEV: ${INSTALL_DEV-false}
+  #   networks:
+  #     - traefik-public
+  #     - default
+  #   depends_on:
+  #     backoffice_pg_db:
+  #       condition: service_healthy
+  #       restart: true
+  #   command: bash sh/prestart.sh
+  #   environment:
+  #     - TZ=${TZ?"Europe/Moscow"}
+  #     - DOMAIN=${DOMAIN}
+  #     - FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
+  #     - ENVIRONMENT=${ENVIRONMENT}
+  #     - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+  #     - SECRET_KEY=${SECRET_KEY?Variable not set}
+  #     - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
+  #     - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
+  #     - POSTGRES_SERVER=${POSTGRES_SERVER}
+  #     - POSTGRES_PORT=${POSTGRES_PORT}
+  #     - POSTGRES_DB=${POSTGRES_DB}
+  #     - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+
+  backoffice_pg_db:
+    image: postgres:12
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    volumes:
+      - backoffice_pg_data:/var/lib/postgresql/data/pgdata
+    environment:
+      - TZ="Europe/Moscow"
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?Variable not set}
+  
+  adminer:
+    image: adminer
+    restart: always
+    networks:
+      - traefik-public
+      - default
+    depends_on:
+      - backoffice_pg_db
+    # environment:
+    #   - ADMINER_DESIGN=pepa-linha-dark
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.constraint-label=traefik-public
+      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.rule=Host(`adminer.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-adminer-http.entrypoints=http
+      - traefik.http.services.${STACK_NAME?Variable not set}-adminer.loadbalancer.server.port=8080
+
+
+volumes:
+  backoffice_pg_data:
+
+networks:
+  traefik-public:
+    external: true

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="24" width="24">
+    <g xmlns="http://www.w3.org/2000/svg" transform="matrix(-1 0 0 -1 24 24)">
+    <g id="Icon / Arrow back" clip-path="url(#clip0_9_2556)">
+        <path id="Vector" d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#3A3031" />
+    </g>
+    <defs>
+        <clipPath id="clip0_9_2556">
+            <rect width="24" height="24" fill="white" />
+        </clipPath>
+    </defs>
+    </g>
+</svg>

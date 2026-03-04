@@ -1,0 +1,36 @@
+@import 'global';
+@import 'scrollbar';
+
+.v-table.v-table--fixed-header > .v-table__wrapper > table > thead > tr > th {
+  background-color: #000;
+  color: #fff;
+  &:hover {
+    color: #666666;
+  }
+}
+
+.v-data-table .v-table__wrapper > table > thead > tr > th,
+.v-data-table-server .v-table__wrapper > table > thead > tr > th,
+.v-data-table .v-data-table__thead > tr > th,
+.v-data-table-server .v-data-table__thead > tr > th,
+.v-data-table th.v-data-table__th,
+.v-data-table-server th.v-data-table__th {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+.v-data-table .v-table__wrapper > table > thead > tr > th:hover,
+.v-data-table-server .v-table__wrapper > table > thead > tr > th:hover,
+.v-data-table th.v-data-table__th:hover,
+.v-data-table-server th.v-data-table__th:hover {
+  color: #666666 !important;
+}
+
+.inline {
+    display: inline;
+}
+
+.v-application__wrap {
+  height: 400px;
+  overflow-x: auto;
+}
